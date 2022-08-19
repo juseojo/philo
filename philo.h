@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:48:43 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/19 19:54:43 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/19 22:12:09 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_vals {
 	long long		time;
 	int				dead;
 	int				*fork;
+	int				*ate;
 	int				*philos;
 	struct 			timeval tv;
 	pthread_mutex_t mutex_lock;

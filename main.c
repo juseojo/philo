@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/19 19:56:53 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/19 23:02:14 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,22 @@ int	dead_do(t_dead dead)
 			dead.vals->dead = 1;
 			return (1);
 		}
+		usleep(100);
 	}
 	return (0);
+}
+
+int	is_min(int	*src, int num)
+{
+	int	i;
+	i = 0;
+	while (src[i])
+	{
+		if (src[i] < num)
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 void	philo_do(t_vals vals)
@@ -69,23 +83,32 @@ void	philo_do(t_vals vals)
 	dead.num = vals.philo_num + 1;
 	num = vals.philo_num + 1;
 	dead.life = vals.args.time_to_die;
+	vals.ate[num - 1] = 0;
 	pthread_create(&dead_thread, 0, dead_do, &dead);
 	while (1)
 	{
 		pthread_mutex_lock(&vals.mutex_lock);
-		if (dead.vals->dead != 1 && check_can_eat(vals.args.number_of_philosophers - 1, num - 1, vals.fork))
+		if (dead.vals->dead != 1 && is_min(vals.ate, vals.ate[num - 1]) && check_can_eat(vals.args.number_of_philosophers - 1, num - 1, vals.fork))
 		{
 			pthread_mutex_unlock(&vals.mutex_lock);
 			printf("%lld %d has taken a fork\n", vals.time, num);
 			printf("%lld %d is eating\n", vals.time, num);
 			dead.life = vals.time + vals.args.time_to_die;
+			//pthread_mutex_lock(&vals.mutex_lock);
+			vals.ate[num - 1] = vals.time;
+			//pthread_mutex_unlock(&vals.mutex_lock);
 			usleep(vals.args.time_to_eat * 1000);
 			pthread_mutex_lock(&vals.mutex_lock);
 			end_eat(vals.args.number_of_philosophers - 1, num - 1, vals.fork);
 			pthread_mutex_unlock(&vals.mutex_lock);
+			if (dead.vals->dead == 1)
+				return ;
 			printf("%lld %d is sleeping\n", vals.time, num);
 			usleep(vals.args.time_to_sleep * 1000);
+			if (dead.vals->dead == 1)
+				return ;
 			printf("%lld %d is thinking\n", vals.time, num);
+			usleep(100);
 		}
 		pthread_mutex_unlock(&vals.mutex_lock);
 		usleep(100);
@@ -123,6 +146,7 @@ int	main(int argc, char *argv[])
 	vals.args.time_to_sleep = ft_atoi(argv[4]);
 	pthread_mutex_init(&vals.mutex_lock, 0);
 	vals.fork = malloc(sizeof(int) * vals.args.number_of_philosophers);
+	vals.ate = malloc(sizeof(int) * vals.args.number_of_philosophers);
 	vals.philos = malloc(sizeof(int) * vals.args.number_of_philosophers);
 	philo_threads = malloc(sizeof(pthread_t) * vals.args.number_of_philosophers);
 	if (!vals.fork || !vals.philos || !philo_threads)
