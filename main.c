@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/19 17:39:46 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/19 19:56:53 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,22 +43,42 @@ void end_eat(int max, int num, int *fork)
 	}
 }
 
+int	dead_do(t_dead dead)
+{
+	while (1)
+	{
+		if (dead.life - dead.vals->time < 0)
+		{
+			printf("%d %d died\n", dead.vals->time, dead.num);
+			dead.vals->dead = 1;
+			return (1);
+		}
+	}
+	return (0);
+}
+
 void	philo_do(t_vals vals)
 {
-	int	num;
-	int start;
+	int 		start;
+	int			num;
+	t_dead		dead;
+	pthread_t	dead_thread;
 
 	start = vals.time;
+	dead.vals = &vals;
+	dead.num = vals.philo_num + 1;
 	num = vals.philo_num + 1;
-	//printf("%lld philo run\n", num);
+	dead.life = vals.args.time_to_die;
+	pthread_create(&dead_thread, 0, dead_do, &dead);
 	while (1)
 	{
 		pthread_mutex_lock(&vals.mutex_lock);
-		if (check_can_eat(vals.args.number_of_philosophers - 1, num - 1, vals.fork))
+		if (dead.vals->dead != 1 && check_can_eat(vals.args.number_of_philosophers - 1, num - 1, vals.fork))
 		{
 			pthread_mutex_unlock(&vals.mutex_lock);
 			printf("%lld %d has taken a fork\n", vals.time, num);
 			printf("%lld %d is eating\n", vals.time, num);
+			dead.life = vals.time + vals.args.time_to_die;
 			usleep(vals.args.time_to_eat * 1000);
 			pthread_mutex_lock(&vals.mutex_lock);
 			end_eat(vals.args.number_of_philosophers - 1, num - 1, vals.fork);
@@ -115,6 +135,7 @@ int	main(int argc, char *argv[])
 		pthread_create((philo_threads + cnt * sizeof(pthread_t)), 0, philo_do, &vals);
 		usleep(100);
 	}
-	usleep(100000000000000);
+	while (vals.dead != 1)
+	usleep(10000);
 	return (1);
 }

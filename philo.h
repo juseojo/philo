@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:48:43 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/19 10:36:11 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/19 19:54:43 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,11 +30,18 @@ typedef struct s_vals {
 	t_args			args;
 	long long		philo_num;
 	long long		time;
+	int				dead;
 	int				*fork;
 	int				*philos;
 	struct 			timeval tv;
 	pthread_mutex_t mutex_lock;
 }	t_vals;
+
+typedef struct s_dead {
+	t_vals		*vals;
+	long long	life;
+	int			num;
+}	t_dead;
 
 int	ft_atoi(const char	*str);
 
