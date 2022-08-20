@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/20 18:35:16 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/20 19:12:56 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,12 +47,17 @@ int	dead_do(t_dead *dead)
 {
 	while (1)
 	{
+		pthread_mutex_lock(&dead->vals->mutex_lock);
+		if (dead->vals->dead == 1)
+			return (1);
 		if (dead->life - dead->vals->time < -1)
 		{
 			printf("%d %d died\n", dead->vals->time, dead->num);
 			dead->vals->dead = 1;
+			pthread_mutex_unlock(&dead->vals->mutex_lock);
 			return (1);
 		}
+		pthread_mutex_unlock(&dead->vals->mutex_lock);
 		usleep(100);
 	}
 	return (0);
@@ -76,7 +81,7 @@ void	do_sleep(t_vals *vals, int sleep_time)
 	int	start;
 
 	start = vals->time;
-	while (vals->time < start + sleep_time)
+	while (vals->time < start + sleep_time && vals->dead != 1)
 		usleep(100);
 }
 
@@ -93,6 +98,7 @@ void	philo_do(t_vals *vals)
 	num = vals->philo_num + 1;
 	dead.life = vals->args.time_to_die;
 	pthread_create(&dead_thread, 0, dead_do, &dead);
+	pthread_detach(dead_thread);
 	while (1)
 	{
 		pthread_mutex_lock(&vals->mutex_lock);
@@ -109,18 +115,19 @@ void	philo_do(t_vals *vals)
 			pthread_mutex_lock(&vals->mutex_lock);
 			end_eat(vals->args.number_of_philosophers - 1, num - 1, vals->fork);
 			pthread_mutex_unlock(&vals->mutex_lock);
-			usleep(50);
+			usleep(100);
 			if (dead.vals->dead == 1)
 				return ;
 			printf("%lld %d is sleeping\n", vals->time, num);
 			do_sleep(vals, vals->args.time_to_sleep);
-			usleep(50);
+			usleep(100);
 			if (dead.vals->dead == 1)
 				return ;
 			printf("%lld %d is thinking\n", vals->time, num);
-			usleep(50);
 		}
 		pthread_mutex_unlock(&vals->mutex_lock);
+		if (dead.vals->dead == 1)
+				return ;
 		usleep(200);
 	}
 }
@@ -131,7 +138,7 @@ void time_do(t_vals *vals)
 
 	gettimeofday(&vals->tv, 0);
 	gettimeofday(&start, 0);
-	while (1)
+	while (vals->dead != 1)
 	{
 		gettimeofday(&vals->tv, 0);
 		pthread_mutex_lock(&vals->mutex_lock);
@@ -162,11 +169,13 @@ int	main(int argc, char *argv[])
 		exit (100);
 	cnt = -1;
 	pthread_create(&time_thread, 0, time_do, &vals);
+	pthread_detach(time_thread);
 	while (++cnt < vals.args.number_of_philosophers)
 	{
 		vals.philo_num = cnt;
 		vals.ate[cnt] = -1;
 		pthread_create((philo_threads + cnt * sizeof(pthread_t)), 0, philo_do, &vals);
+		pthread_detach(*(philo_threads + cnt * sizeof(pthread_t)));
 		usleep(100);
 	}
 	while (vals.dead != 1)
