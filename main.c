@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/19 23:02:14 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/20 11:22:33 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,15 @@ int	is_min(int	*src, int num)
 	return (1);
 }
 
+void	do_sleep(t_vals *vals, int sleep_time)
+{
+	int	start;
+
+	start = vals->time;
+	while (vals->time < start + sleep_time)
+	{}
+}
+
 void	philo_do(t_vals vals)
 {
 	int 		start;
@@ -83,7 +92,6 @@ void	philo_do(t_vals vals)
 	dead.num = vals.philo_num + 1;
 	num = vals.philo_num + 1;
 	dead.life = vals.args.time_to_die;
-	vals.ate[num - 1] = 0;
 	pthread_create(&dead_thread, 0, dead_do, &dead);
 	while (1)
 	{
@@ -94,17 +102,16 @@ void	philo_do(t_vals vals)
 			printf("%lld %d has taken a fork\n", vals.time, num);
 			printf("%lld %d is eating\n", vals.time, num);
 			dead.life = vals.time + vals.args.time_to_die;
-			//pthread_mutex_lock(&vals.mutex_lock);
 			vals.ate[num - 1] = vals.time;
-			//pthread_mutex_unlock(&vals.mutex_lock);
-			usleep(vals.args.time_to_eat * 1000);
+			do_sleep(&vals, vals.args.time_to_eat);
 			pthread_mutex_lock(&vals.mutex_lock);
 			end_eat(vals.args.number_of_philosophers - 1, num - 1, vals.fork);
 			pthread_mutex_unlock(&vals.mutex_lock);
 			if (dead.vals->dead == 1)
 				return ;
 			printf("%lld %d is sleeping\n", vals.time, num);
-			usleep(vals.args.time_to_sleep * 1000);
+			do_sleep(&vals, vals.args.time_to_sleep);
+			usleep(100);
 			if (dead.vals->dead == 1)
 				return ;
 			printf("%lld %d is thinking\n", vals.time, num);
@@ -149,17 +156,22 @@ int	main(int argc, char *argv[])
 	vals.ate = malloc(sizeof(int) * vals.args.number_of_philosophers);
 	vals.philos = malloc(sizeof(int) * vals.args.number_of_philosophers);
 	philo_threads = malloc(sizeof(pthread_t) * vals.args.number_of_philosophers);
-	if (!vals.fork || !vals.philos || !philo_threads)
+	if (!vals.fork || !vals.philos || !philo_threads || !vals.ate)
 		exit (100);
 	cnt = -1;
 	pthread_create(&time_thread, 0, time_do, &vals);
 	while (++cnt < vals.args.number_of_philosophers)
 	{
 		vals.philo_num = cnt;
+		vals.ate[cnt] = -1;
 		pthread_create((philo_threads + cnt * sizeof(pthread_t)), 0, philo_do, &vals);
 		usleep(100);
 	}
 	while (vals.dead != 1)
-	usleep(10000);
+	usleep(1000);
+	free(vals.fork);
+	free(vals.ate);
+	free(vals.philos);
+	free(philo_threads);
 	return (1);
 }
