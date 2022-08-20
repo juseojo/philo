@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/20 18:26:35 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/20 18:35:16 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ int	main(int argc, char *argv[])
 		vals.philo_num = cnt;
 		vals.ate[cnt] = -1;
 		pthread_create((philo_threads + cnt * sizeof(pthread_t)), 0, philo_do, &vals);
-		usleep(10);
+		usleep(100);
 	}
 	while (vals.dead != 1)
 	{
