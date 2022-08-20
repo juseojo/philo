@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:44:45 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 01:07:25 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 01:57:01 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,4 +43,13 @@ int	dead_check(int dead)
 		return (1);
 	}
 	return (0);
+}
+
+void	ending(t_vals *vals)
+{
+	usleep(10000);
+	pthread_mutex_destroy(&vals->mutex_lock);
+	free(vals->fork);
+	free(vals->ate);
+	free(vals->philos);
 }

@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:42:39 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 01:10:13 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 02:36:19 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	*dead_do(void *argu)
 	t_dead	*dead;
 
 	dead = argu;
-	while (dead->vals->dead != 1)
+	while (dead->stop != 1 && dead->vals->dead != 1)
 	{
 		pthread_mutex_lock(&dead->vals->mutex_lock);
 		if (dead->vals->dead == 1)
@@ -51,7 +51,7 @@ void	*philo_do(void *argu)
 		pthread_mutex_lock(&vals->mutex_lock);
 		if (dead.vals->dead != 1 && is_min(vals->ate, vals->ate[dead.num - 1]) \
 		&& check_can_eat(vals->args.number_of_philosophers - 1, \
-		dead.num - 1, vals->fork) && ++dead.ate_cnt != dead.vals->args.must_eat)
+		dead.num - 1, vals->fork))
 		{
 			if (philo_life(vals, &dead, dead.num))
 				return (NULL);
@@ -74,7 +74,7 @@ void	*time_do(void *argu)
 	vals = argu;
 	gettimeofday(&vals->tv, 0);
 	gettimeofday(&start, 0);
-	while (vals->dead != 1)
+	while (vals->dead != 1 && vals->ends != vals->args.number_of_philosophers)
 	{
 		gettimeofday(&vals->tv, 0);
 		pthread_mutex_lock(&vals->mutex_lock);

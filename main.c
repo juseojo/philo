@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 00:50:21 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 02:33:38 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ void	end_eat(int max, int num, int *fork)
 	}
 }
 
-int	philo_life(t_vals *vals, t_dead *dead, int num)
+void	have_meal(t_vals *vals, t_dead *dead, int num)
 {
 	pthread_mutex_unlock(&vals->mutex_lock);
 	printf("%lld %d has taken a fork\n", vals->time, num);
@@ -56,6 +56,18 @@ int	philo_life(t_vals *vals, t_dead *dead, int num)
 	pthread_mutex_lock(&vals->mutex_lock);
 	end_eat(vals->args.number_of_philosophers - 1, num - 1, vals->fork);
 	pthread_mutex_unlock(&vals->mutex_lock);
+}
+
+int	philo_life(t_vals *vals, t_dead *dead, int num)
+{
+	have_meal(vals, dead, num);
+	if (++dead->ate_cnt == dead->vals->args.must_eat)
+	{
+		dead->stop = 1;
+		dead->vals->ends += 1;
+		usleep(1000);
+		return (1);
+	}
 	usleep(100);
 	if (dead_check(dead->vals->dead))
 		return (1);
@@ -66,15 +78,6 @@ int	philo_life(t_vals *vals, t_dead *dead, int num)
 		return (1);
 	printf("%lld %d is thinking\n", vals->time, dead->num);
 	return (0);
-}
-
-void	ending(t_vals *vals)
-{
-	usleep(10000);
-	pthread_mutex_destroy(&vals->mutex_lock);
-	free(vals->fork);
-	free(vals->ate);
-	free(vals->philos);
 }
 
 int	main(int argc, char *argv[])
@@ -97,7 +100,7 @@ int	main(int argc, char *argv[])
 		pthread_detach(*(philo_threads + vals.philo_num * sizeof(pthread_t)));
 		usleep(100);
 	}
-	while (vals.dead != 1)
+	while (vals.dead != 1 && vals.ends != vals.args.number_of_philosophers)
 		usleep(100);
 	ending(&vals);
 	free(philo_threads);

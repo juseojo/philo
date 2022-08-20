@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:48:43 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 01:11:12 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 01:57:13 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ typedef struct s_vals {
 	long long		philo_num;
 	long long		time;
 	int				dead;
+	int				ends;
 	int				*fork;
 	int				*ate;
 	int				*philos;
@@ -43,6 +44,7 @@ typedef struct s_dead {
 	t_vals		*vals;
 	long long	life;
 	int			num;
+	int			stop;
 	int			ate_cnt;
 }	t_dead;
 
@@ -57,5 +59,6 @@ void	do_sleep(t_vals *vals, int sleep_time);
 int		dead_check(int dead);
 int		check_can_eat(int max, int num, int *fork);
 int		philo_life(t_vals *vals, t_dead *dead, int num);
+void	ending(t_vals *vals);
 
 #endif
