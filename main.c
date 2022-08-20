@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/20 16:59:11 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/20 18:26:35 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	dead_do(t_dead *dead)
 {
 	while (1)
 	{
-		if (dead->life - dead->vals->time < 0)
+		if (dead->life - dead->vals->time < -1)
 		{
 			printf("%d %d died\n", dead->vals->time, dead->num);
 			dead->vals->dead = 1;
@@ -77,7 +77,7 @@ void	do_sleep(t_vals *vals, int sleep_time)
 
 	start = vals->time;
 	while (vals->time < start + sleep_time)
-	{}
+		usleep(100);
 }
 
 void	philo_do(t_vals *vals)
@@ -101,24 +101,27 @@ void	philo_do(t_vals *vals)
 			pthread_mutex_unlock(&vals->mutex_lock);
 			printf("%lld %d has taken a fork\n", vals->time, num);
 			printf("%lld %d is eating\n", vals->time, num);
+			pthread_mutex_lock(&vals->mutex_lock);
 			dead.life = vals->time + vals->args.time_to_die;
+			pthread_mutex_unlock(&vals->mutex_lock);
 			vals->ate[num - 1] = vals->time;
 			do_sleep(vals, vals->args.time_to_eat);
 			pthread_mutex_lock(&vals->mutex_lock);
 			end_eat(vals->args.number_of_philosophers - 1, num - 1, vals->fork);
 			pthread_mutex_unlock(&vals->mutex_lock);
+			usleep(50);
 			if (dead.vals->dead == 1)
 				return ;
 			printf("%lld %d is sleeping\n", vals->time, num);
 			do_sleep(vals, vals->args.time_to_sleep);
-			usleep(100);
+			usleep(50);
 			if (dead.vals->dead == 1)
 				return ;
 			printf("%lld %d is thinking\n", vals->time, num);
-			usleep(100);
+			usleep(50);
 		}
 		pthread_mutex_unlock(&vals->mutex_lock);
-		usleep(100);
+		usleep(200);
 	}
 }
 
@@ -134,7 +137,6 @@ void time_do(t_vals *vals)
 		pthread_mutex_lock(&vals->mutex_lock);
 		vals->time =	(vals->tv.tv_sec - start.tv_sec) * 1000 + ((vals->tv.tv_usec - start.tv_usec) / 1000);
 		pthread_mutex_unlock(&vals->mutex_lock);
-		usleep(100);
 	}
 }
 
@@ -165,7 +167,7 @@ int	main(int argc, char *argv[])
 		vals.philo_num = cnt;
 		vals.ate[cnt] = -1;
 		pthread_create((philo_threads + cnt * sizeof(pthread_t)), 0, philo_do, &vals);
-		usleep(100);
+		usleep(10);
 	}
 	while (vals.dead != 1)
 	{
