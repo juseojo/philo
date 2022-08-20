@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/20 19:12:56 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/20 19:44:09 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ int	dead_do(t_dead *dead)
 	{
 		pthread_mutex_lock(&dead->vals->mutex_lock);
 		if (dead->vals->dead == 1)
+		{
+			pthread_mutex_unlock(&dead->vals->mutex_lock);
 			return (1);
+		}
 		if (dead->life - dead->vals->time < -1)
 		{
 			printf("%d %d died\n", dead->vals->time, dead->num);
@@ -115,19 +118,27 @@ void	philo_do(t_vals *vals)
 			pthread_mutex_lock(&vals->mutex_lock);
 			end_eat(vals->args.number_of_philosophers - 1, num - 1, vals->fork);
 			pthread_mutex_unlock(&vals->mutex_lock);
-			usleep(100);
 			if (dead.vals->dead == 1)
+			{
+				usleep(500);
 				return ;
+			}
 			printf("%lld %d is sleeping\n", vals->time, num);
 			do_sleep(vals, vals->args.time_to_sleep);
-			usleep(100);
+			usleep(10000);
 			if (dead.vals->dead == 1)
+			{
+				usleep(500);
 				return ;
+			}
 			printf("%lld %d is thinking\n", vals->time, num);
 		}
 		pthread_mutex_unlock(&vals->mutex_lock);
 		if (dead.vals->dead == 1)
+		{
+				usleep(500);
 				return ;
+		}
 		usleep(200);
 	}
 }
@@ -179,9 +190,9 @@ int	main(int argc, char *argv[])
 		usleep(100);
 	}
 	while (vals.dead != 1)
-	{
-	}
-	usleep(1000);
+	{}
+	usleep(100000);
+	pthread_mutex_destroy(&vals.mutex_lock);
 	free(vals.fork);
 	free(vals.ate);
 	free(vals.philos);
