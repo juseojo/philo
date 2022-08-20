@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:48:40 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/08 15:03:12 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 01:08:01 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,11 +54,9 @@ static long	cul_result(const char *str, int sign, int *i, int *j)
 {
 	long	result;
 	long	dig;
-	long	count;
 
 	dig = 1;
 	result = 0;
-	count = 0;
 	while (*j > 0)
 	{
 		result += (str[*i + *j - 1] - '0') * dig;
