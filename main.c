@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/20 11:22:33 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/20 16:59:11 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,14 +43,14 @@ void end_eat(int max, int num, int *fork)
 	}
 }
 
-int	dead_do(t_dead dead)
+int	dead_do(t_dead *dead)
 {
 	while (1)
 	{
-		if (dead.life - dead.vals->time < 0)
+		if (dead->life - dead->vals->time < 0)
 		{
-			printf("%d %d died\n", dead.vals->time, dead.num);
-			dead.vals->dead = 1;
+			printf("%d %d died\n", dead->vals->time, dead->num);
+			dead->vals->dead = 1;
 			return (1);
 		}
 		usleep(100);
@@ -80,60 +80,60 @@ void	do_sleep(t_vals *vals, int sleep_time)
 	{}
 }
 
-void	philo_do(t_vals vals)
+void	philo_do(t_vals *vals)
 {
 	int 		start;
 	int			num;
 	t_dead		dead;
 	pthread_t	dead_thread;
 
-	start = vals.time;
-	dead.vals = &vals;
-	dead.num = vals.philo_num + 1;
-	num = vals.philo_num + 1;
-	dead.life = vals.args.time_to_die;
+	start = vals->time;
+	dead.vals = vals;
+	dead.num = vals->philo_num + 1;
+	num = vals->philo_num + 1;
+	dead.life = vals->args.time_to_die;
 	pthread_create(&dead_thread, 0, dead_do, &dead);
 	while (1)
 	{
-		pthread_mutex_lock(&vals.mutex_lock);
-		if (dead.vals->dead != 1 && is_min(vals.ate, vals.ate[num - 1]) && check_can_eat(vals.args.number_of_philosophers - 1, num - 1, vals.fork))
+		pthread_mutex_lock(&vals->mutex_lock);
+		if (dead.vals->dead != 1 && is_min(vals->ate, vals->ate[num - 1]) && check_can_eat(vals->args.number_of_philosophers - 1, num - 1, vals->fork))
 		{
-			pthread_mutex_unlock(&vals.mutex_lock);
-			printf("%lld %d has taken a fork\n", vals.time, num);
-			printf("%lld %d is eating\n", vals.time, num);
-			dead.life = vals.time + vals.args.time_to_die;
-			vals.ate[num - 1] = vals.time;
-			do_sleep(&vals, vals.args.time_to_eat);
-			pthread_mutex_lock(&vals.mutex_lock);
-			end_eat(vals.args.number_of_philosophers - 1, num - 1, vals.fork);
-			pthread_mutex_unlock(&vals.mutex_lock);
+			pthread_mutex_unlock(&vals->mutex_lock);
+			printf("%lld %d has taken a fork\n", vals->time, num);
+			printf("%lld %d is eating\n", vals->time, num);
+			dead.life = vals->time + vals->args.time_to_die;
+			vals->ate[num - 1] = vals->time;
+			do_sleep(vals, vals->args.time_to_eat);
+			pthread_mutex_lock(&vals->mutex_lock);
+			end_eat(vals->args.number_of_philosophers - 1, num - 1, vals->fork);
+			pthread_mutex_unlock(&vals->mutex_lock);
 			if (dead.vals->dead == 1)
 				return ;
-			printf("%lld %d is sleeping\n", vals.time, num);
-			do_sleep(&vals, vals.args.time_to_sleep);
+			printf("%lld %d is sleeping\n", vals->time, num);
+			do_sleep(vals, vals->args.time_to_sleep);
 			usleep(100);
 			if (dead.vals->dead == 1)
 				return ;
-			printf("%lld %d is thinking\n", vals.time, num);
+			printf("%lld %d is thinking\n", vals->time, num);
 			usleep(100);
 		}
-		pthread_mutex_unlock(&vals.mutex_lock);
+		pthread_mutex_unlock(&vals->mutex_lock);
 		usleep(100);
 	}
 }
 
-void time_do(t_vals vals)
+void time_do(t_vals *vals)
 {
 	struct 			timeval start;
 
-	gettimeofday(&vals.tv, 0);
+	gettimeofday(&vals->tv, 0);
 	gettimeofday(&start, 0);
 	while (1)
 	{
-		gettimeofday(&vals.tv, 0);
-		pthread_mutex_lock(&vals.mutex_lock);
-		vals.time =	(vals.tv.tv_sec - start.tv_sec) * 1000 + ((vals.tv.tv_usec - start.tv_usec) / 1000);
-		pthread_mutex_unlock(&vals.mutex_lock);
+		gettimeofday(&vals->tv, 0);
+		pthread_mutex_lock(&vals->mutex_lock);
+		vals->time =	(vals->tv.tv_sec - start.tv_sec) * 1000 + ((vals->tv.tv_usec - start.tv_usec) / 1000);
+		pthread_mutex_unlock(&vals->mutex_lock);
 		usleep(100);
 	}
 }
@@ -168,6 +168,8 @@ int	main(int argc, char *argv[])
 		usleep(100);
 	}
 	while (vals.dead != 1)
+	{
+	}
 	usleep(1000);
 	free(vals.fork);
 	free(vals.ate);
