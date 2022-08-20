@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/20 19:44:09 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/20 21:04:28 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void end_eat(int max, int num, int *fork)
 
 int	dead_do(t_dead *dead)
 {
-	while (1)
+	while (dead->vals->dead != 1)
 	{
 		pthread_mutex_lock(&dead->vals->mutex_lock);
 		if (dead->vals->dead == 1)
@@ -53,10 +53,10 @@ int	dead_do(t_dead *dead)
 			pthread_mutex_unlock(&dead->vals->mutex_lock);
 			return (1);
 		}
-		if (dead->life - dead->vals->time < -1)
+		if (dead->life - dead->vals->time < 0)
 		{
-			printf("%d %d died\n", dead->vals->time, dead->num);
 			dead->vals->dead = 1;
+			printf("%d %d died\n", dead->vals->time, dead->num);
 			pthread_mutex_unlock(&dead->vals->mutex_lock);
 			return (1);
 		}
@@ -102,12 +102,12 @@ void	philo_do(t_vals *vals)
 	dead.life = vals->args.time_to_die;
 	pthread_create(&dead_thread, 0, dead_do, &dead);
 	pthread_detach(dead_thread);
-	while (1)
+	while (dead.vals->dead != 1)
 	{
 		pthread_mutex_lock(&vals->mutex_lock);
 		if (dead.vals->dead != 1 && is_min(vals->ate, vals->ate[num - 1]) && check_can_eat(vals->args.number_of_philosophers - 1, num - 1, vals->fork))
 		{
-			pthread_mutex_unlock(&vals->mutex_lock);
+			pthread_mutex_unlock(&vals->mutex_lock);	
 			printf("%lld %d has taken a fork\n", vals->time, num);
 			printf("%lld %d is eating\n", vals->time, num);
 			pthread_mutex_lock(&vals->mutex_lock);
@@ -118,29 +118,28 @@ void	philo_do(t_vals *vals)
 			pthread_mutex_lock(&vals->mutex_lock);
 			end_eat(vals->args.number_of_philosophers - 1, num - 1, vals->fork);
 			pthread_mutex_unlock(&vals->mutex_lock);
+			usleep(100);
 			if (dead.vals->dead == 1)
 			{
-				usleep(500);
+				usleep(1000000);
 				return ;
 			}
 			printf("%lld %d is sleeping\n", vals->time, num);
 			do_sleep(vals, vals->args.time_to_sleep);
-			usleep(10000);
+			usleep(100);
 			if (dead.vals->dead == 1)
 			{
-				usleep(500);
+				usleep(1000000);
 				return ;
 			}
 			printf("%lld %d is thinking\n", vals->time, num);
 		}
-		pthread_mutex_unlock(&vals->mutex_lock);
-		if (dead.vals->dead == 1)
-		{
-				usleep(500);
-				return ;
-		}
+		else
+			pthread_mutex_unlock(&vals->mutex_lock);
 		usleep(200);
 	}
+	usleep(1000000);
+	return ;
 }
 
 void time_do(t_vals *vals)
@@ -191,7 +190,7 @@ int	main(int argc, char *argv[])
 	}
 	while (vals.dead != 1)
 	{}
-	usleep(100000);
+	usleep(10000);
 	pthread_mutex_destroy(&vals.mutex_lock);
 	free(vals.fork);
 	free(vals.ate);
