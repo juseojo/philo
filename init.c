@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:40:55 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 10:55:11 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 11:04:30 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ int	args_init(char *argv[], int argc, t_vals *vals)
 		vals->args.must_eat = ft_atoi(argv[5]);
 	else
 		vals->args.must_eat = -1;
-	if (argc == 6 && vals->args.must_eat < 0)
+	if (argc == 6 && vals->args.must_eat <= 0)
 		return (0);
 	if (vals->args.number_of_philosophers < 0 || vals->args.time_to_die < 0 \
 	|| vals->args.time_to_eat < 0 || vals->args.time_to_sleep < 0)
