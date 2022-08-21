@@ -6,57 +6,55 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 15:43:47 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 17:32:32 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	check_can_eat(int max, int num, int *fork)
+int	check_can_eat(int max, int num, int **fork)
 {
 	if (max == 0)
 		return (0);
-	if (num != max && fork[num] != 1 && fork[num + 1] != 1)
+	if (num != max && (*fork)[num] != 1 && (*fork)[num + 1] != 1)
 	{
-		fork[num] = 1;
-		fork[num + 1] = 1;
+		(*fork)[num] = 1;
+		(*fork)[num + 1] = 1;
 		return (1);
 	}
-	else if (num == max && fork[num] != 1 && fork[0] != 1)
+	else if (num == max && (*fork)[num] != 1 && (*fork)[0] != 1)
 	{
-		fork[num] = 1;
-		fork[0] = 1;
+		(*fork)[num] = 1;
+		(*fork)[0] = 1;
 		return (1);
 	}
 	return (0);
 }
 
-void	end_eat(int max, int num, int *fork)
+void	end_eat(int max, int num, int **fork)
 {
 	if (num != max)
 	{
-		fork[num] = 0;
-		fork[num + 1] = 0;
+		(*fork)[num] = 0;
+		(*fork)[num + 1] = 0;
 	}
 	else if (num == max)
 	{
-		fork[num] = 0;
-		fork[0] = 0;
+		(*fork)[num] = 0;
+		(*fork)[0] = 0;
 	}
 }
 
 void	have_meal(t_vals *vals, t_dead *dead, int num)
 {
-	pthread_mutex_unlock(&vals->mutex_lock);
 	printf("%lld %d has taken a fork\n", vals->time, num);
 	printf("%lld %d is eating\n", vals->time, num);
 	dead->life = vals->time + vals->args.time_to_die;
-	pthread_mutex_lock(&vals->mutex_lock);
 	vals->ate[num - 1] = vals->time;
 	pthread_mutex_unlock(&vals->mutex_lock);
 	do_sleep(vals, vals->args.time_to_eat);
 	pthread_mutex_lock(&vals->mutex_lock);
-	end_eat(vals->args.number_of_philosophers - 1, num - 1, vals->fork);
+	end_eat(vals->args.number_of_philosophers - 1, num - 1, &vals->fork);
 	pthread_mutex_unlock(&vals->mutex_lock);
 }
 
@@ -67,18 +65,23 @@ int	philo_life(t_vals *vals, t_dead *dead, int num)
 	{
 		dead->stop = 1;
 		dead->vals->ends += 1;
+		dead->vals->ate[num - 1] = 2147483647;
 		usleep(1000);
 		return (1);
 	}
 	usleep(100);
 	if (dead_check(dead->vals->dead))
 		return (1);
+	pthread_mutex_lock(&vals->mutex_lock);
 	printf("%lld %d is sleeping\n", vals->time, dead->num);
+	pthread_mutex_unlock(&vals->mutex_lock);
 	do_sleep(vals, vals->args.time_to_sleep);
 	usleep(100);
 	if (dead_check(dead->vals->dead))
 		return (1);
+	pthread_mutex_lock(&vals->mutex_lock);
 	printf("%lld %d is thinking\n", vals->time, dead->num);
+	pthread_mutex_unlock(&vals->mutex_lock);
 	return (0);
 }
 

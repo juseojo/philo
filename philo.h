@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:48:43 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 13:39:32 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 17:28:30 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	*time_do(void *argu);
 int		is_min(int	*src, int max, int num);
 void	do_sleep(t_vals *vals, int sleep_time);
 int		dead_check(int dead);
-int		check_can_eat(int max, int num, int *fork);
+int		check_can_eat(int max, int num, int **fork);
 int		philo_life(t_vals *vals, t_dead *dead, int num);
 void	ending(t_vals *vals);
 
