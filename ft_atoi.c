@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:48:40 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 01:08:01 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 10:53:41 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ int	ft_atoi(const char	*str)
 	while (str[i + j])
 	{
 		if (!('0' <= str[i + j] && str[i + j] <= '9'))
-			exit(100);
+			return (-1);
 		j = j + 1;
 	}
 	result = cul_result(str, sign_minus, &i, &j);

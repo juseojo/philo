@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 02:33:38 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 10:42:57 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 int	check_can_eat(int max, int num, int *fork)
 {
+	if (max == 0)
+		return (0);
 	if (num != max && fork[num] != 1 && fork[num + 1] != 1)
 	{
 		fork[num] = 1;

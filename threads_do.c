@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads_do.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:42:39 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 02:36:19 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 10:38:41 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	*dead_do(void *argu)
 			return (NULL);
 		}
 		pthread_mutex_unlock(&dead->vals->mutex_lock);
-		usleep(100);
+		usleep(500);
 	}
 	return (NULL);
 }
@@ -81,6 +81,7 @@ void	*time_do(void *argu)
 		vals->time = (vals->tv.tv_sec - start.tv_sec) * 1000 + \
 		((vals->tv.tv_usec - start.tv_usec) / 1000);
 		pthread_mutex_unlock(&vals->mutex_lock);
+		usleep(100);
 	}
 	return (NULL);
 }

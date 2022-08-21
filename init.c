@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:40:55 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 01:52:15 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 10:55:11 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	init(char *argv[], int argc, t_vals *vals, pthread_t **philo_threads)
+int	args_init(char *argv[], int argc, t_vals *vals)
 {
 	vals->args.number_of_philosophers = ft_atoi(argv[1]);
 	vals->args.time_to_die = ft_atoi(argv[2]);
@@ -22,6 +22,18 @@ int	init(char *argv[], int argc, t_vals *vals, pthread_t **philo_threads)
 		vals->args.must_eat = ft_atoi(argv[5]);
 	else
 		vals->args.must_eat = -1;
+	if (argc == 6 && vals->args.must_eat < 0)
+		return (0);
+	if (vals->args.number_of_philosophers < 0 || vals->args.time_to_die < 0 \
+	|| vals->args.time_to_eat < 0 || vals->args.time_to_sleep < 0)
+		return (0);
+	return (1);
+}
+
+int	init(char *argv[], int argc, t_vals *vals, pthread_t **philo_threads)
+{
+	if (!args_init(argv, argc, vals))
+		return (0);
 	vals->dead = 0;
 	vals->philo_num = -1;
 	vals->ends = 0;
