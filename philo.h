@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:48:43 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 01:57:13 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 13:39:32 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ void	dead_init(t_dead	*dead, t_vals	*vals, pthread_t	*dead_thread);
 void	*dead_do(void *argu);
 void	*philo_do(void *argu);
 void	*time_do(void *argu);
-int		is_min(int	*src, int num);
+int		is_min(int	*src, int max, int num);
 void	do_sleep(t_vals *vals, int sleep_time);
 int		dead_check(int dead);
 int		check_can_eat(int max, int num, int *fork);

@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:42:39 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 10:38:41 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 14:44:02 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,16 @@ void	*dead_do(void *argu)
 			pthread_mutex_unlock(&dead->vals->mutex_lock);
 			return (NULL);
 		}
-		if (dead->life - dead->vals->time < 0)
+		if (dead->life - dead->vals->time <= 0)
 		{
 			dead->vals->dead = 1;
+			usleep(2000);
 			printf("%lld %d died\n", dead->vals->time, dead->num);
 			pthread_mutex_unlock(&dead->vals->mutex_lock);
 			return (NULL);
 		}
 		pthread_mutex_unlock(&dead->vals->mutex_lock);
-		usleep(500);
+		usleep(100);
 	}
 	return (NULL);
 }
@@ -49,7 +50,8 @@ void	*philo_do(void *argu)
 	while (dead.vals->dead != 1)
 	{
 		pthread_mutex_lock(&vals->mutex_lock);
-		if (dead.vals->dead != 1 && is_min(vals->ate, vals->ate[dead.num - 1]) \
+		if (dead.vals->dead != 1 && is_min(vals->ate, vals->args.\
+		number_of_philosophers, vals->ate[dead.num - 1]) \
 		&& check_can_eat(vals->args.number_of_philosophers - 1, \
 		dead.num - 1, vals->fork))
 		{

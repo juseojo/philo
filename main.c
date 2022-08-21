@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 10:42:57 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 14:57:02 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,10 @@ void	have_meal(t_vals *vals, t_dead *dead, int num)
 	pthread_mutex_unlock(&vals->mutex_lock);
 	printf("%lld %d has taken a fork\n", vals->time, num);
 	printf("%lld %d is eating\n", vals->time, num);
-	pthread_mutex_lock(&vals->mutex_lock);
 	dead->life = vals->time + vals->args.time_to_die;
-	pthread_mutex_unlock(&vals->mutex_lock);
+	pthread_mutex_lock(&vals->mutex_lock);
 	vals->ate[num - 1] = vals->time;
+	pthread_mutex_unlock(&vals->mutex_lock);
 	do_sleep(vals, vals->args.time_to_eat);
 	pthread_mutex_lock(&vals->mutex_lock);
 	end_eat(vals->args.number_of_philosophers - 1, num - 1, vals->fork);

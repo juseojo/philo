@@ -3,21 +3,21 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:44:45 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 01:57:01 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/21 13:39:29 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-int	is_min(int	*src, int num)
+int	is_min(int	*src, int max, int num)
 {
 	int	i;
 
 	i = 0;
-	while (src[i])
+	while (i < max)
 	{
 		if (src[i] < num)
 			return (0);
@@ -47,7 +47,7 @@ int	dead_check(int dead)
 
 void	ending(t_vals *vals)
 {
-	usleep(10000);
+	usleep(1000000);
 	pthread_mutex_destroy(&vals->mutex_lock);
 	free(vals->fork);
 	free(vals->ate);
