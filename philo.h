@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:48:43 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 17:28:30 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/22 20:11:29 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,14 +30,15 @@ typedef struct s_args {
 typedef struct s_vals {
 	t_args			args;
 	long long		philo_num;
-	long long		time;
 	int				dead;
 	int				ends;
 	int				*fork;
 	int				*ate;
 	int				*philos;
-	struct timeval	tv;
+	struct timeval	start_time;
 	pthread_mutex_t	mutex_lock;
+	pthread_mutex_t	fork_lock;
+	pthread_mutex_t	ate_lock;
 }	t_vals;
 
 typedef struct s_dead {
@@ -48,17 +49,18 @@ typedef struct s_dead {
 	int			ate_cnt;
 }	t_dead;
 
-int		ft_atoi(const char	*str);
-int		init(char *argv[], int argc, t_vals *vals, pthread_t **philo_threads);
-void	dead_init(t_dead	*dead, t_vals	*vals, pthread_t	*dead_thread);
-void	*dead_do(void *argu);
-void	*philo_do(void *argu);
-void	*time_do(void *argu);
-int		is_min(int	*src, int max, int num);
-void	do_sleep(t_vals *vals, int sleep_time);
-int		dead_check(int dead);
-int		check_can_eat(int max, int num, int **fork);
-int		philo_life(t_vals *vals, t_dead *dead, int num);
-void	ending(t_vals *vals);
+int			ft_atoi(const char	*str);
+int			init(char *argv[], int argc, t_vals *vals, pthread_t **philo_threads);
+void		dead_init(t_dead	*dead, t_vals	*vals, pthread_t	*dead_thread);
+void		*dead_do(void *argu);
+void		*philo_do(void *argu);
+void		*time_do(void *argu);
+int			is_min(t_vals *vals, int num);
+void		do_sleep(t_vals *vals, int sleep_time);
+int			dead_check(int dead);
+int			check_can_eat(t_vals *vals, int num);
+int			philo_life(t_vals *vals, t_dead *dead, int num);
+void		ending(t_vals *vals);
+long long	now_time(struct timeval	start_time);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:40:55 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/21 11:04:30 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/22 19:54:45 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,10 @@ int	init(char *argv[], int argc, t_vals *vals, pthread_t **philo_threads)
 	vals->dead = 0;
 	vals->philo_num = -1;
 	vals->ends = 0;
+	gettimeofday(&vals->start_time, 0);
 	pthread_mutex_init(&vals->mutex_lock, 0);
+	pthread_mutex_init(&vals->fork_lock, 0);
+	pthread_mutex_init(&vals->ate_lock, 0);
 	vals->fork = malloc(sizeof(int) * vals->args.number_of_philosophers);
 	vals->ate = malloc(sizeof(int) * vals->args.number_of_philosophers);
 	vals->philos = malloc(sizeof(int) * vals->args.number_of_philosophers);
