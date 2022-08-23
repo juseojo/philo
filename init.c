@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:40:55 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/22 19:54:45 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/23 13:59:07 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,7 @@ int	init(char *argv[], int argc, t_vals *vals, pthread_t **philo_threads)
 	pthread_mutex_init(&vals->mutex_lock, 0);
 	pthread_mutex_init(&vals->fork_lock, 0);
 	pthread_mutex_init(&vals->ate_lock, 0);
+	pthread_mutex_init(&vals->dead_lock, 0);
 	vals->fork = malloc(sizeof(int) * vals->args.number_of_philosophers);
 	vals->ate = malloc(sizeof(int) * vals->args.number_of_philosophers);
 	vals->philos = malloc(sizeof(int) * vals->args.number_of_philosophers);
@@ -51,13 +52,13 @@ int	init(char *argv[], int argc, t_vals *vals, pthread_t **philo_threads)
 	return (1);
 }
 
-void	dead_init(t_dead	*dead, t_vals	*vals, pthread_t	*dead_thread)
+void	dead_init(t_dead *dead, t_vals *vals, pthread_t *dead_thread, long long *life)
 {
 	dead->vals = vals;
 	dead->num = vals->philo_num + 1;
-	dead->life = vals->args.time_to_die;
+	dead->life = life;
+	*dead->life = vals->args.time_to_die;
 	dead->ate_cnt = 0;
-	dead->stop = 0;
 	pthread_create(dead_thread, 0, dead_do, dead);
 	pthread_detach(*dead_thread);
 }

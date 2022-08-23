@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:44:45 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/22 20:57:19 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/23 17:20:02 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,20 +48,26 @@ void	do_sleep(t_vals *vals, int sleep_time)
 	start = now_time(vals->start_time);
 	usleep(sleep_time * 9 / 10);
 	now = now_time(vals->start_time);
-	while (now < start + sleep_time && vals->dead != 1)
+	while (now < start + sleep_time)
 	{
+		if (dead_check(vals))
+			break;
 		usleep(500);
 		now = now_time(vals->start_time);
 	}
 }
 
-int	dead_check(int dead)
+int	dead_check(t_vals *vals)
 {
-	if (dead == 1)
+	pthread_mutex_lock(&vals->dead_lock);
+	if (vals->dead == 1 || vals->ends == \
+	vals->args.number_of_philosophers)
 	{
+		pthread_mutex_unlock(&vals->dead_lock);
 		usleep(1000000);
 		return (1);
 	}
+	pthread_mutex_unlock(&vals->dead_lock);
 	return (0);
 }
 
@@ -69,6 +75,9 @@ void	ending(t_vals *vals)
 {
 	usleep(1000000);
 	pthread_mutex_destroy(&vals->mutex_lock);
+	pthread_mutex_destroy(&vals->ate_lock);
+	pthread_mutex_destroy(&vals->dead_lock);
+	pthread_mutex_destroy(&vals->fork_lock);
 	free(vals->fork);
 	free(vals->ate);
 	free(vals->philos);
