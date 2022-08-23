@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:40:55 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/23 13:59:07 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/23 21:28:15 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int	init(char *argv[], int argc, t_vals *vals, pthread_t **philo_threads)
 	return (1);
 }
 
-void	dead_init(t_dead *dead, t_vals *vals, pthread_t *dead_thread, long long *life)
+void	dead_init(t_dead *dead, t_vals *vals, \
+pthread_t *dead_thread, long long *life)
 {
 	dead->vals = vals;
 	dead->num = vals->philo_num + 1;

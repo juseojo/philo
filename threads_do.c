@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:42:39 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/23 17:21:18 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/23 21:27:15 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,8 @@ void	*dead_do(void *argu)
 			dead->vals->dead = 1;
 			pthread_mutex_unlock(&dead->vals->dead_lock);
 			usleep(1000);
-			printf("%lld %d died\n", now_time(dead->vals->start_time), dead->num);
+			printf("%lld %d died\n", \
+			now_time(dead->vals->start_time), dead->num);
 			return (NULL);
 		}
 		pthread_mutex_unlock(&dead->vals->dead_lock);

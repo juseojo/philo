@@ -6,7 +6,7 @@
 /*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:44:45 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/23 17:20:02 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/23 21:27:57 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	is_min(t_vals *vals, int num)
 	return (1);
 }
 
-long long now_time(struct timeval	start_time)
+long long	now_time(struct timeval start_time)
 {
 	struct timeval	now;
 
@@ -51,7 +51,7 @@ void	do_sleep(t_vals *vals, int sleep_time)
 	while (now < start + sleep_time)
 	{
 		if (dead_check(vals))
-			break;
+			break ;
 		usleep(500);
 		now = now_time(vals->start_time);
 	}
