@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   util.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:44:45 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/23 21:27:57 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/24 09:09:44 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ int	dead_check(t_vals *vals)
 	vals->args.number_of_philosophers)
 	{
 		pthread_mutex_unlock(&vals->dead_lock);
-		usleep(1000000);
+		usleep(1000);
 		return (1);
 	}
 	pthread_mutex_unlock(&vals->dead_lock);
@@ -74,7 +74,6 @@ int	dead_check(t_vals *vals)
 void	ending(t_vals *vals)
 {
 	usleep(1000000);
-	pthread_mutex_destroy(&vals->mutex_lock);
 	pthread_mutex_destroy(&vals->ate_lock);
 	pthread_mutex_destroy(&vals->dead_lock);
 	pthread_mutex_destroy(&vals->fork_lock);

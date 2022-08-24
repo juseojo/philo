@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:48:43 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/23 21:29:13 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/24 09:04:31 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,6 @@ typedef struct s_vals {
 	int				*ate;
 	int				*philos;
 	struct timeval	start_time;
-	pthread_mutex_t	mutex_lock;
 	pthread_mutex_t	fork_lock;
 	pthread_mutex_t	dead_lock;
 	pthread_mutex_t	ate_lock;

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/08 14:34:56 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/23 17:32:20 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/24 08:51:59 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,7 +86,7 @@ int	philo_life(t_vals *vals, t_dead *dead, int num)
 	printf("%lld %d is sleeping\n", now_time(vals->start_time), dead->num);
 	pthread_mutex_unlock(&vals->dead_lock);
 	do_sleep(vals, vals->args.time_to_sleep);
-	usleep(100);
+	usleep(200);
 	if (dead_check(dead->vals))
 		return (1);
 	printf("%lld %d is thinking\n", now_time(vals->start_time), dead->num);

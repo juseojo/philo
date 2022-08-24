@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:40:55 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/23 21:28:15 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/24 09:04:31 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ int	init(char *argv[], int argc, t_vals *vals, pthread_t **philo_threads)
 	vals->philo_num = -1;
 	vals->ends = 0;
 	gettimeofday(&vals->start_time, 0);
-	pthread_mutex_init(&vals->mutex_lock, 0);
 	pthread_mutex_init(&vals->fork_lock, 0);
 	pthread_mutex_init(&vals->ate_lock, 0);
 	pthread_mutex_init(&vals->dead_lock, 0);

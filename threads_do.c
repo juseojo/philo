@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   threads_do.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: seongjch <seongjch@student.42.fr>          +#+  +:+       +#+        */
+/*   By: seongjch <seongjch@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/21 00:42:39 by seongjch          #+#    #+#             */
-/*   Updated: 2022/08/23 21:27:15 by seongjch         ###   ########.fr       */
+/*   Updated: 2022/08/24 09:10:28 by seongjch         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,6 @@ void	*dead_do(void *argu)
 		{
 			dead->vals->dead = 1;
 			pthread_mutex_unlock(&dead->vals->dead_lock);
-			usleep(1000);
 			printf("%lld %d died\n", \
 			now_time(dead->vals->start_time), dead->num);
 			return (NULL);
@@ -52,6 +51,8 @@ void	*philo_do(void *argu)
 	dead_init(&dead, vals, &dead_thread, &life);
 	while (1)
 	{
+		if (dead_check(dead.vals))
+			return (NULL);
 		if (is_min(vals, dead.num - 1) \
 		&& check_can_eat(vals, dead.num - 1))
 		{
